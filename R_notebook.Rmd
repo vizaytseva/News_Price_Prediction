@@ -1,0 +1,57 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+
+Загрузим датасет
+
+```{r}
+df <- read.csv("C:/Users/vika1/data_for_prediction.csv",na = "")
+```
+```{r}
+library(ggplot2)
+```
+
+Посмотрим на данные (колонки)
+```{r}
+str(df)
+```
+```{r}
+df2 <- df[,-1]
+```
+```{r}
+str(df2)
+```
+```{r}
+head(complete.cases(df2))
+```
+Убедились, что в датасете нет пропущенных значений
+
+Посмотрим на описательные статистики
+```{r}
+summary(df2)
+```
+Посмотрим на интересующее описание статистики столбца Close - она также является ценой закрытия в дне
+```{r}
+summary(df2$Close)
+```
+Создадим еще одну колонку, чтобу у каждого тикера был уникальный id
+```{r}
+df3 <- transform(df2,
+                ID = as.numeric(factor(ticker)))
+```
+```{r}
+head(df3)
+```
+Визуализируем данные по цене закрытия и дате
+
+```{r}
+ggplot(df3, mapping = aes(x=date, y=Close, color=ticker))+geom_point()+facet_wrap(vars(ticker))+labs(title = "Close-date for each ticker",
+         x = "Year of observation",
+         y = "Price")  
+```
+
+
